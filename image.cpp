@@ -1,7 +1,16 @@
-// image_processor.cpp
-#include "image.h"
+/* ## LabWork1
+## Author
+Basmanov Rodion B81-mm
+## Contacts
+st135699@student.spbu.ru
+## Description
+LabWork1 */
 
-std::vector<uint8_t> rotate90Clockwise(const BMPHeader &header, const std::vector<uint8_t> &data) {
+#include "image.h"
+#include <algorithm>
+#include <vector>
+
+std::vector<uint8_t> rotate90Clockwise(BMPHeader &header, const std::vector<uint8_t> &data) {
     int width = header.width;
     int height = header.height;
     int bytesPerPixel = header.bitCount / 8;
@@ -11,15 +20,35 @@ std::vector<uint8_t> rotate90Clockwise(const BMPHeader &header, const std::vecto
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             for (int c = 0; c < bytesPerPixel; ++c) {
-                rotatedData[(x * height + (height - y - 1)) * bytesPerPixel + c] =
+                rotatedData[(x * height + (height - y - 1)) * bytesPerPixel + c] = 
                     data[(y * width + x) * bytesPerPixel + c];
             }
         }
     }
+    std::swap(header.width, header.height);
     return rotatedData;
 }
 
-std::vector<uint8_t> applyGaussianFilter(const BMPHeader &header, const std::vector<uint8_t> &data) {
+std::vector<uint8_t> rotate90CounterClockwise(BMPHeader &header, const std::vector<uint8_t> &data) {
+    int width = header.width;
+    int height = header.height;
+    int bytesPerPixel = header.bitCount / 8;
+
+    std::vector<uint8_t> rotatedData(width * height * bytesPerPixel);
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            for (int c = 0; c < bytesPerPixel; ++c) {
+                rotatedData[((width - x - 1) * height + y) * bytesPerPixel + c] =
+                    data[(y * width + x) * bytesPerPixel + c];
+            }
+        }
+    }
+    std::swap(header.width, header.height);
+    return rotatedData;
+}
+
+std::vector<uint8_t> applyGaussianFilter(BMPHeader &header, const std::vector<uint8_t> &data) {
     int width = header.width;
     int height = header.height;
     int bytesPerPixel = header.bitCount / 8;
@@ -42,9 +71,20 @@ std::vector<uint8_t> applyGaussianFilter(const BMPHeader &header, const std::vec
                         newValue += data[pixelIndex] * kernel[ky + 1][kx + 1];
                     }
                 }
-                filteredData[(y * width + x) * bytesPerPixel + c] = static_cast<uint8_t>(newValue);
+                filteredData[(y * width + x) * bytesPerPixel + c] = std::clamp(static_cast<int>(newValue), 0, 255);
             }
         }
     }
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            if (y == 0 || y == height - 1 || x == 0 || x == width - 1) {
+                for (int c = 0; c < bytesPerPixel; ++c) {
+                    filteredData[(y * width + x) * bytesPerPixel + c] = data[(y * width + x) * bytesPerPixel + c];
+                }
+            }
+        }
+    }
+
     return filteredData;
 }
