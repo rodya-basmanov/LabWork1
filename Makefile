@@ -1,18 +1,39 @@
-TARGET = image
+PROJECT=image
 
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra
+IDIR=.
+CXX=g++
+CXXFLAGS=-I$(IDIR) -std=c++17
 
-SRC = main.cpp bmp.cpp image.cpp
-OBJ = $(SRC:.cpp=.o)
+ODIR=obj
+LDIR=../lib
 
-$(TARGET): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJ)
+LIBS=-lm
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+DEPS = image.h turnimage.h kernel.h
+
+OBJ = main.o image.o rightturnimage.o leftturnimage.o kernel.o
+
+.PHONY: default
+
+default: $(PROJECT)
+
+$(PROJECT): $(OBJ)
+	$(CXX) -o $@ $^ $(LIBS)
+
+main.o: main.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+Image.o: image.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+RightTurnImage.o: rightturnimage.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+LeftTurnImage.o: leftturnimage.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+Kernel.o: kernel.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
 clean:
-	rm -f $(OBJ) $(TARGET)
-
-.PHONY: clean
+	rm -f $(OBJ) $(PROJECT)
