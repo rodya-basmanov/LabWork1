@@ -7,29 +7,34 @@ st135699@student.spbu.ru
 LabWork1 */
 
 #include <iostream>
-#include "bmp.h"
+#include <vector>
+#include <string>
 #include "image.h"
+#include "turnimage.h"
 
-int main() {
-    BMPHeader header;
-    std::vector<uint8_t> imageData;
+int main(int argc, char* argv[])
+{
+    std::cout << "Enter path to image file, radius (int), and sigma (float) for Gaussian blur:" << std::endl;
+    
+    std::string path;
+    std::getline(std::cin, path);
+    
+    int radius;
+    float sigma;
+    std::cin >> radius >> sigma;
 
-    if (!loadBMP("image.bmp", header, imageData)) {
-        return 1;
-    }
+    Turn_Image::RightTurn(path.c_str());
+    Turn_Image::LeftTurn(path.c_str());
 
-    size_t memorySize = calculateMemorySize(header);
-    std::cout << "Required amount of memory: " << memorySize << " bytes." << std::endl;
+    Image leftImage(0, 0);
+    leftImage.Read("Left_rotated_image.bmp");
+    leftImage.ApplyGaussianBlur(radius, sigma);
+    leftImage.Export("Blurred_Left_Rotated_Image.bmp");
 
-    auto rotatedClockwise = rotate90Clockwise(header, imageData);
-    saveBMP("rotated_clockwise.bmp", header, rotatedClockwise);
+    Image rightImage(0, 0);
+    rightImage.Read("Right_rotated_image.bmp");
+    rightImage.ApplyGaussianBlur(radius, sigma);
+    rightImage.Export("Blurred_Right_Rotated_Image.bmp");
 
-    auto rotatedCounterClockwise = rotate90CounterClockwise(header, imageData);
-    saveBMP("rotated_counterclockwise.bmp", header, rotatedCounterClockwise);
-
-    auto filteredImage = applyGaussianFilter(header, rotatedClockwise);
-    saveBMP("filtered_gaussian.bmp", header, filteredImage);
-
-    std::cout << "Processing is complete!" << std::endl;
     return 0;
 }
