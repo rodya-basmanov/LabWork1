@@ -6,10 +6,14 @@ st135699@student.spbu.ru
 ## Description
 LabWork1 */
 
-#pragma once
+#ifndef IMAGE_H
+#define IMAGE_H
 
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <cmath>
+#include <cstdint>
 #include "kernel.h"
 
 struct Color
@@ -66,3 +70,5 @@ private:
     int m_height;
     std::vector<Color> m_pixels;
 };
+
+#endif // IMAGE_H
