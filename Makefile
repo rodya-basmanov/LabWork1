@@ -2,12 +2,12 @@ PROJECT=image
 
 IDIR=.
 CXX=g++
-CXXFLAGS=-I$(IDIR) -std=c++17
+CXXFLAGS=-I$(IDIR) -std=c++17 -fopenmp
 
 ODIR=obj
 LDIR=../lib
 
-LIBS=-lm
+LIBS=-lm -fopenmp
 
 DEPS = image.h turnimage.h kernel.h
 
