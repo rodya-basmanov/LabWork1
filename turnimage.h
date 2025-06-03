@@ -13,6 +13,8 @@ namespace Turn_Image
 {
     void RightTurn(const char* path);
     void LeftTurn(const char* path);
+    void RightTurnSequential(const char* path);
+    void LeftTurnSequential(const char* path);
 }
 
 #endif

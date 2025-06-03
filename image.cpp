@@ -9,6 +9,7 @@ LabWork1 */
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <omp.h>
 #include "image.h"
 #include "turnimage.h"
 #include "kernel.h"
@@ -132,7 +133,44 @@ void Image::Export(const char* path) const
 void Image::ApplyGaussianBlur(int radius, float sigma)
 {
     std::vector<std::vector<float>> kernel = Gauss_Kernel::GenerateGaussianKernel(radius, sigma);
-    int kernelSize = 2 * radius + 1;
+    Image blurredImage(m_width, m_height);
+
+    #pragma omp parallel for collapse(2)
+    for (int y = 0; y < m_height; ++y)
+    {
+        for (int x = 0; x < m_width; ++x)
+        {
+            Color newColor;
+            float totalWeight = 0.0f;
+
+            for (int ky = -radius; ky <= radius; ++ky)
+            {
+                for (int kx = -radius; kx <= radius; ++kx)
+                {
+                    int pixelX = std::max(0, std::min(x + kx, m_width - 1));
+                    int pixelY = std::max(0, std::min(y + ky, m_height - 1));
+
+                    Color currentColor = GetColor(pixelX, pixelY);
+                    newColor.r += currentColor.r * kernel[ky + radius][kx + radius];
+                    newColor.g += currentColor.g * kernel[ky + radius][kx + radius];
+                    newColor.b += currentColor.b * kernel[ky + radius][kx + radius];
+                    totalWeight += kernel[ky + radius][kx + radius];
+                }
+            }
+
+            newColor.r /= totalWeight;
+            newColor.g /= totalWeight;
+            newColor.b /= totalWeight;
+
+            blurredImage.SetColor(newColor, x, y);
+        }
+    }
+    m_pixels = std::move(blurredImage.m_pixels);
+}
+
+void Image::ApplyGaussianBlurSequential(int radius, float sigma)
+{
+    std::vector<std::vector<float>> kernel = Gauss_Kernel::GenerateGaussianKernel(radius, sigma);
     Image blurredImage(m_width, m_height);
 
     for (int y = 0; y < m_height; ++y)

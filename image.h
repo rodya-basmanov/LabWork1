@@ -59,6 +59,7 @@ public:
     void Read(const char* path);
     void Export(const char* path) const;
     void ApplyGaussianBlur(int radius, float sigma);
+    void ApplyGaussianBlurSequential(int radius, float sigma);
 
 private:
     int m_width;
