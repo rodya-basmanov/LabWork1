@@ -8,8 +8,8 @@ LabWork1 */
 
 #include <iostream>
 #include <omp.h>
-#include "image.h"
-#include "turnimage.h"
+#include "../include/image.h"
+#include "../include/turnimage.h"
 #include <vector>
 
 void Turn_Image::LeftTurn(const char* path)

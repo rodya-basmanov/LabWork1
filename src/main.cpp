@@ -12,8 +12,8 @@ LabWork1 */
 #include <chrono>
 #include <functional>
 #include <omp.h>
-#include "image.h"
-#include "turnimage.h"
+#include "../include/image.h"
+#include "../include/turnimage.h"
 
 double measureExecutionTime(std::function<void()> func) {
     auto start = std::chrono::high_resolution_clock::now();

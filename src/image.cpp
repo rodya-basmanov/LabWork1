@@ -10,9 +10,9 @@ LabWork1 */
 #include <fstream>
 #include <vector>
 #include <omp.h>
-#include "image.h"
-#include "turnimage.h"
-#include "kernel.h"
+#include "../include/image.h"
+#include "../include/turnimage.h"
+#include "../include/kernel.h"
 
 Color::Color() : r(0), g(0), b(0) {}
 
