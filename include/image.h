@@ -6,10 +6,14 @@ st135699@student.spbu.ru
 ## Description
 LabWork1 */
 
-#pragma once
+#ifndef IMAGE_H
+#define IMAGE_H
 
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <cmath>
+#include <cstdint>
 #include "kernel.h"
 
 struct Color
@@ -59,9 +63,12 @@ public:
     void Read(const char* path);
     void Export(const char* path) const;
     void ApplyGaussianBlur(int radius, float sigma);
+    void ApplyGaussianBlurSequential(int radius, float sigma);
 
 private:
     int m_width;
     int m_height;
     std::vector<Color> m_pixels;
 };
+
+#endif // IMAGE_H

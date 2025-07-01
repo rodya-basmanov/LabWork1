@@ -9,7 +9,7 @@ LabWork1 */
 #include <cmath>
 #include <vector>
 #include <algorithm>
-#include "kernel.h"
+#include "../include/kernel.h"
 
 std::vector<std::vector<float>> Gauss_Kernel::GenerateGaussianKernel(int radius, float sigma)
 {
